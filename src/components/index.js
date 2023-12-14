@@ -21,7 +21,7 @@ const Chat = () => {
     if (input.trim) {
       setChat([...chat, { role: "user", content: input }]);
       setInput("");
-      const response = await fetch("http://localhost:8000/api/chat", {
+      const response = await fetch("/process_data", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -50,7 +50,7 @@ const Chat = () => {
       }
 
       if (!title) {
-        const createTitle = await fetch("http://localhost:8000/api/title", {
+        const createTitle = await fetch("/process_data", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -70,7 +70,7 @@ const Chat = () => {
   return (
     <div className=" h-screen w-screen flex bg-[#070719]">
       <div className=" w-[20%] h-screen bg-[#000001] text-white p-4">
-        <div className=" h-[5%]">
+        <div className=" h-[5%] mb-5">
           <button
             className="flex items-center justify-between bg-slate-600 text-white w-full h-[50px] border rounded hover:bg-slate-700 px-4"
             onClick={() => {
