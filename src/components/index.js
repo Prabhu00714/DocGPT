@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import { FaEdit } from "react-icons/fa";
 
 const examples = [
-  "How to use Tailwind CSS",
-  "How to use Tailwind CSS with React",
-  "How to use Tailwind CSS with Next.js",
-  "How to use Tailwind CSS with Gatsby",
-  "How to use Tailwind CSS with Svelte",
-  "How to use Tailwind CSS with Vue",
-  "How to use Tailwind CSS with Angular",
-  "How to use Tailwind CSS with Ember",
+  "What are the symptoms of COVID-19?",
+  "Can you recommend a healthy diet plan for weight loss?",
+  "What should I do if I have a persistent headache?",
+  "How can I manage stress and anxiety?",
+  "What is the recommended daily exercise routine for a person with diabetes?",
+  "How can I prevent the common cold and flu during the winter months?",
+  "I have been experiencing digestive issues. What dietary changes can I make to improve my gut health?",
 ];
 const Chat = () => {
   const [chat, setChat] = useState([]);
