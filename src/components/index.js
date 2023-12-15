@@ -10,6 +10,7 @@ const examples = [
   "How can I prevent the common cold and flu during the winter months?",
   "I have been experiencing digestive issues. What dietary changes can I make to improve my gut health?",
 ];
+
 const Chat = () => {
   const [chat, setChat] = useState([]);
   const [chatHistory, setChatHistory] = useState([]);
@@ -20,7 +21,7 @@ const Chat = () => {
     if (input.trim) {
       setChat([...chat, { role: "user", content: input }]);
       setInput("");
-      const response = await fetch("/process_data", {
+      const response = await fetch("http://localhost:8000/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -30,7 +31,6 @@ const Chat = () => {
         }),
       });
 
-      //eslint-disable-next-line
       const readData = response.body
         .pipeThrough(new TextDecoderStream())
         .getReader();
@@ -49,7 +49,7 @@ const Chat = () => {
       }
 
       if (!title) {
-        const createTitle = await fetch("/process_data", {
+        const createTitle = await fetch("http://localhost:8000/api/title", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -64,6 +64,13 @@ const Chat = () => {
         setChatHistory([...chatHistory, title]);
       }
     }
+  };
+
+  const handleDeleteChat = (index) => {
+    setChatHistory("");
+    setInput("");
+    setChat("");
+    setTitle("");
   };
 
   return (
@@ -82,57 +89,102 @@ const Chat = () => {
           </button>
         </div>
         <div className=" h-[70%] overflow-scroll shadow-lg hide-scroll-bar mb-4">
-          {chatHistory.map((item, index) => (
-            <div className=" py-3 text-center rounded mt-4 text-lg font-light flex items-center px-8 hover:bg-slate-600 cursor-pointer">
-              <span className=" mr-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="icon icon-tabler icon-tabler-message"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  stroke-width="2"
-                  stroke="currentColor"
-                  fill="none"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+          {chatHistory &&
+            chatHistory.map((item, index) => (
+              <div className=" py-3 text-center rounded mt-4 text-lg font-light flex items-center px-8 hover:bg-slate-600 cursor-pointer">
+                <span className=" mr-4">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="icon icon-tabler icon-tabler-message"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M8 9h8"></path>
+                    <path d="M8 13h6"></path>
+                    <path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12z"></path>
+                  </svg>
+                </span>
+                <span className=" text-left">{item.title}</span>
+
+                <button
+                  className="absolute top-1 right-1 text-slate-500 hover:text-slate-300"
+                  onClick={() => handleDeleteChat(index)}
                 >
-                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                  <path d="M8 9h8"></path>
-                  <path d="M8 13h6"></path>
-                  <path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12z"></path>
-                </svg>
-              </span>
-              <span className=" text-left">{item.title}</span>
-            </div>
-          ))}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="icon icon-tabler icon-tabler-trash"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    strokeWidth="2"
+                    stroke="currentColor"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <line x1="4" y1="7" x2="20" y2="7"></line>
+                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+                  </svg>
+                </button>
+              </div>
+            ))}
         </div>
         <div className="overflow-scroll shadow-lg hide-scroll-bar h-[20%] border-t">
-          {[1, 2, 3].map((item, index) => (
-            <div className=" py-3 text-center rounded mt-4 text-lg font-light flex items-center px-8 hover:bg-slate-600 cursor-pointer">
-              <span className=" mr-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="icon icon-tabler icon-tabler-settings-code"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  stroke-width="2"
-                  stroke="currentColor"
-                  fill="none"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                  <path d="M11.482 20.924a1.666 1.666 0 0 1 -1.157 -1.241a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.312 .318 1.644 1.794 .995 2.697"></path>
-                  <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path>
-                  <path d="M20 21l2 -2l-2 -2"></path>
-                  <path d="M17 17l-2 2l2 2"></path>
-                </svg>
-              </span>
-              Code Settings
-            </div>
-          ))}
+          <div className=" py-3 text-center rounded mt-4 text-lg font-light flex items-center px-8 hover:bg-slate-600 cursor-pointer">
+            <span className=" mr-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="icon icon-tabler icon-tabler-settings-code"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+                stroke="currentColor"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                <path d="M11.482 20.924a1.666 1.666 0 0 1 -1.157 -1.241a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.312 .318 1.644 1.794 .995 2.697"></path>
+                <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path>
+                <path d="M20 21l2 -2l-2 -2"></path>
+                <path d="M17 17l-2 2l2 2"></path>
+              </svg>
+            </span>
+            Settings
+          </div>
+          <div className=" py-3 text-center rounded mt-4 text-lg font-light flex items-center px-8 hover:bg-slate-600 cursor-pointer">
+            <span className=" mr-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="icon icon-tabler icon-tabler-user"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+                stroke="currentColor"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+                <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+              </svg>
+            </span>
+            User
+          </div>
         </div>
       </div>
       <div className=" w-[80%]">
